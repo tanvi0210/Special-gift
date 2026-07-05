@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Gift for Keshav</title>
+    <!-- Google Fonts for Elegant Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #ffeef2;
+            --box-color: #ff4d6d;
+            --box-lid-color: #ff758f;
+            --ribbon-color: #fff0f3;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffeef2 0%, #ffccd5 100%);
+            overflow: hidden;
+            font-family: 'Playfair Display', serif;
+            cursor: pointer;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- THE PRESENT BOX WRAPPER --- */
+        .gift-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .gift-box {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: var(--box-color);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Ribbon on the box body */
+        .gift-box::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 100%;
+            background-color: var(--ribbon-color);
+        }
+
+        /* Gift Lid */
+        .lid {
+            position: absolute;
+            top: -25px;
+            left: -10px;
+            width: 220px;
+            height: 35px;
+            background-color: var(--box-lid-color);
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 11;
+        }
+
+        /* Ribbon on the lid */
+        .lid::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 100%;
+            background-color: var(--ribbon-color);
+        }
+
+        /* --- THE BOUQUET (Hidden behind/inside initially) --- */
+        .bouquet {
+            position: absolute;
+            font-size: 140px; /* Slightly larger for better visual impact */
+            text-align: center;
+            line-height: 1;
+            top: 45%;
+            opacity: 0;
+            transform: scale(0.1) translateY(50px);
+            transition: all 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* --- THE ROMANTIC TEXT --- */
+        .message {
+            position: absolute;
+            top: 15%;
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.8rem;
+            color: #c71585;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(-30px);
+            transition: all 1s ease 0.3s;
+            text-align: center;
+            width: 100%;
+            z-index: 6;
+        }
+
+        /* Hint Text */
+        .hint {
+            position: absolute;
+            bottom: 10%;
+            font-size: 1.2rem;
+            color: #ff4d6d;
+            animation: pulse 1.5s infinite;
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* --- OPENED STATE STYLES --- */
+        /* Lid flies up and away */
+        .container.open .lid {
+            transform: translateY(-150px) rotate(-25deg) translateX(-50px);
+            opacity: 0;
+        }
+
+        /* Box body slides downward out of the view and fades */
+        .container.open .gift-wrapper {
+            transform: translateY(150px) scale(0.8);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Bouquet smoothly blooms and scales into center view */
+        .container.open .bouquet {
+            opacity: 1;
+            transform: scale(1) translateY(-50px);
+        }
+
+        /* Message fades in cleanly */
+        .container.open .message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .container.open .hint {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Sparkles/Hearts Animation */
+        .heart-sparkle {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 7;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="giftContainer">
+        <div class="message">I love you Keshav</div>
+        
+        <div class="bouquet" id="bouquet">
+            💐
+        </div>
+
+        <div class="gift-wrapper">
+            <div class="lid"></div>
+            <div class="gift-box"></div>
+        </div>
+
+        <div class="hint" id="hintText">Tap to open your gift ✨</div>
+    </div>
+
+    <script>
+        const container = document.getElementById('giftContainer');
+        
+        container.addEventListener('click', () => {
+            if (!container.classList.contains('open')) {
+                container.classList.add('open');
+                createHearts();
+            } else {
+                // Allows toggling back shut if you click again
+                container.classList.remove('open');
+            }
+        });
+
+        function createHearts() {
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart-sparkle');
+                heart.innerHTML = ['❤️', '🌸', '✨', '🌹', '💝'][Math.floor(Math.random() * 5)];
+                
+                // Track center of viewport
+                heart.style.left = (window.innerWidth / 2 - 20 + (Math.random() - 0.5) * 60) + 'px';
+                heart.style.top = (window.innerHeight / 2) + 'px';
+                
+                document.body.appendChild(heart);
+                
+                // Random dynamic floating trajectories
+                heart.animate([
+                    { transform: 'translate(0, 0) scale(0.3)', opacity: 1 },
+                    { transform: `translate(${(Math.random() - 0.5) * 300}px, -${150 + Math.random() * 200}px) scale(1.5)`, opacity: 0 }
+                ], {
+                    duration: 1200 + Math.random() * 1000,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                });
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 2200);
+            }
+        }
+    </script>
+</body>
+</html>
